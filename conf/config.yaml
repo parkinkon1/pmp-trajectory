@@ -19,7 +19,7 @@ dataset:
   valid:
     tfrecords: 'data/tfrecords'
     idxs: 'data/idxs'
-  batchsize: 2
+  batchsize: 1
 
 model:
   in_feature_dim: 9
