@@ -76,11 +76,9 @@ class SceneTransformer(pl.LightningModule):
         gt = states_batch[:,:,:6][to_predict_mask]
         prediction = prediction[to_predict_mask]    
         
-        Loss = nn.MSELoss(reduction='mean')
+        Loss = nn.MSELoss(reduction='none')
         loss_ = Loss(gt.unsqueeze(1).repeat(1,6,1), prediction)
         loss_ = torch.min(torch.sum(torch.sum(loss_, dim=0),dim=-1))
-
-        self.log_dict({'train_loss': loss_})
 
         return loss_
 
@@ -120,7 +118,7 @@ class SceneTransformer(pl.LightningModule):
         gt = states_batch[:,:,:6][to_predict_mask]
         prediction = prediction[to_predict_mask]     
         
-        Loss = nn.MSELoss(reduction='mean')
+        Loss = nn.MSELoss(reduction='none')
         loss_ = Loss(gt.unsqueeze(1).repeat(1,6,1), prediction)
         loss_ = torch.min(torch.sum(torch.sum(loss_, dim=0),dim=-1))
 
