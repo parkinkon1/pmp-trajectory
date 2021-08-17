@@ -1,5 +1,16 @@
 seed: 1235
 
+mode: 'train'
+
+# dataset:
+#   train:
+#     tfrecords: 'data/tf_example/training'
+#     idxs: 'data/idxs_training_bs_1'
+#   valid:
+#     tfrecords: 'data/tf_example/validation'
+#     idxs: 'data/idxs_validation_bs_1'
+#   batchsize: 1
+
 dataset:
   num_workers: 5
   train:
@@ -8,7 +19,7 @@ dataset:
   valid:
     tfrecords: 'data/tfrecords'
     idxs: 'data/idxs'
-  batchsize: 1
+  batchsize: 2
 
 model:
   in_feature_dim: 9
@@ -20,8 +31,15 @@ model:
   k: 4
   F: 6
 
-device_ids: '2,3'
-device_num: 2
-max_epochs: 100
+
+device_ids: '0,1,2,3'
+# device_num: 2
+
+train:
+  ckpt_path: ''
+  n_gpus: -1
+  accelerator: 'ddp'
+  max_epochs: 100
+  
 
 

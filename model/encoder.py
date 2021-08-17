@@ -94,6 +94,3 @@ class Encoder(nn.Module):
         output = self.layer_P(output,agent_batch_mask, padding_mask, hidden_mask)
         Q_ = self.layer_Q(output,agent_batch_mask, padding_mask, hidden_mask)
         return Q_
-
-
-
