@@ -300,7 +300,9 @@ def transform_func(feature):
         feature[key] = func(feat)
     return feature
 
-def WaymoDataset(tfrecord_dir, idx_dir):
+
+
+def WaymoDataset(tfrecord_dir, idx_dir, shuffle_queue_size=None):
 
     tfrecord_pattern = tfrecord_dir+'/{}'
     index_pattern = idx_dir+'/{}'
@@ -310,7 +312,8 @@ def WaymoDataset(tfrecord_dir, idx_dir):
     for fn in fnlist:
         splits[fn] = 1/len(fnlist)
 
-    dataset = MultiTFRecordDataset(tfrecord_pattern, index_pattern, splits, description=features_description, transform=transform_func, infinite=False)
+    dataset = MultiTFRecordDataset(tfrecord_pattern, index_pattern, splits, shuffle_queue_size=shuffle_queue_size, \
+        description=features_description, transform=transform_func, infinite=False)
 
     return dataset
 

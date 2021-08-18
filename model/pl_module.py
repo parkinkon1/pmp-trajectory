@@ -101,6 +101,8 @@ class SceneTransformer(pl.LightningModule):
             #sys.exit()
          #   loss_ = torch.zeros(1).to(gt.device)
 
+        self.log_dict({'train_loss': loss_})
+
         return loss_
 
     def on_after_backward(self) -> None:
@@ -164,7 +166,7 @@ class SceneTransformer(pl.LightningModule):
         prediction = prediction[to_predict_mask]     
         
         Loss = nn.MSELoss(reduction='none')
-        loss_ = Loss(gt.unsqueeze(1).repeat(1,6,1), prediction)
+        loss_ = Loss(gt.unsqueeze(2).repeat(1,1,6), prediction)
         loss_ = torch.min(torch.sum(torch.sum(loss_, dim=0),dim=-1))
 
         self.log_dict({'val_loss': loss_})

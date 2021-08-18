@@ -12,6 +12,7 @@ mode: 'train'
 #   batchsize: 1
 
 dataset:
+  type: 'waymo'
   num_workers: 5
   train:
     tfrecords: 'data/tfrecords'

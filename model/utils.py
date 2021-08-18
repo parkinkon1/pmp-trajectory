@@ -41,8 +41,7 @@ class SelfAttLayer(nn.Module):
         self.scale = torch.sqrt(torch.FloatTensor([head_num])).to(device)
 
         self.layer_Y2_ = nn.Sequential(View((-1,time_steps,feature_dim)), nn.Linear(feature_dim,feature_dim), nn.ReLU())
-        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,k*feature_dim), nn.ReLU())
-        self.layer_F2_ = nn.Sequential(nn.Linear(k*feature_dim,feature_dim), nn.ReLU())
+        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,feature_dim), nn.ReLU())
         self.layer_Z_ = nn.LayerNorm(feature_dim)
 
         self.across_time = across_time
@@ -83,8 +82,7 @@ class SelfAttLayer(nn.Module):
         Y2_ = self.layer_Y2_(Y1_)
         S_ = Y2_ + x
         F1_ = self.layer_F1_(S_)
-        F2_ = self.layer_F2_(F1_)
-        Z_ = self.layer_Z_(F2_)
+        Z_ = self.layer_Z_(F1_)
 
         return Z_, Q, K, V # -> [A,T,D], [A,T,H,d]*3
 
@@ -103,8 +101,7 @@ class CrossAttLayer(nn.Module):
         self.scale = torch.sqrt(torch.FloatTensor([head_num])).to(device)
 
         self.layer_Y2_ = nn.Sequential(View((-1,time_steps,feature_dim)), nn.Linear(feature_dim,feature_dim), nn.ReLU())
-        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,k*feature_dim), nn.ReLU())
-        self.layer_F2_ = nn.Sequential(nn.Linear(k*feature_dim,feature_dim), nn.ReLU())
+        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,feature_dim), nn.ReLU())
         self.layer_Z_ = nn.LayerNorm(feature_dim)
 
     def forward(self, agent, rg, agent_rg_mask, padding_mask, rg_valid_mask): # agent -> [A,T,D] / rg -> [G,T,D]
@@ -131,8 +128,7 @@ class CrossAttLayer(nn.Module):
         Y2_ = self.layer_Y2_(Y1_)
         S_ = Y2_ + agent
         F1_ = self.layer_F1_(S_)
-        F2_ = self.layer_F2_(F1_)
-        Z_ = self.layer_Z_(F2_)
+        Z_ = self.layer_Z_(F1_)
 
         return Z_, Q, K, V # -> [A,T,D], [G,T,H,d], [A,T,H,d]*2
 
@@ -148,8 +144,7 @@ class SelfAttLayer_Enc(nn.Module):
 
         self.layer_X_ = nn.LayerNorm(feature_dim)
         self.layer_att_ = nn.MultiheadAttention(embed_dim=feature_dim,num_heads=head_num)
-        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,k*feature_dim), nn.ReLU())
-        self.layer_F2_ = nn.Sequential(nn.Linear(k*feature_dim,feature_dim), nn.ReLU())
+        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,feature_dim), nn.ReLU())
         self.layer_Z_ = nn.LayerNorm(feature_dim)
 
     def forward(self, x, batch_mask, padding_mask=None, hidden_mask=None):
@@ -182,8 +177,7 @@ class SelfAttLayer_Enc(nn.Module):
 
         S_ = att_output + x
         F1_ = self.layer_F1_(S_)
-        F2_ = self.layer_F2_(F1_)
-        Z_ = self.layer_Z_(F2_)
+        Z_ = self.layer_Z_(F1_)
 
         return Z_
 
@@ -199,8 +193,7 @@ class SelfAttLayer_Dec(nn.Module):
 
         self.layer_X_ = nn.LayerNorm(feature_dim)
         self.layer_att_ = nn.MultiheadAttention(embed_dim=feature_dim,num_heads=head_num)
-        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,k*feature_dim), nn.ReLU())
-        self.layer_F2_ = nn.Sequential(nn.Linear(k*feature_dim,feature_dim), nn.ReLU())
+        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,feature_dim), nn.ReLU())
         self.layer_Z_ = nn.LayerNorm(feature_dim)
 
     def forward(self, x, batch_mask, padding_mask=None, hidden_mask=None):
@@ -236,8 +229,7 @@ class SelfAttLayer_Dec(nn.Module):
 
         S_ = att_output + x
         F1_ = self.layer_F1_(S_)
-        F2_ = self.layer_F2_(F1_)
-        Z_ = self.layer_Z_(F2_)
+        Z_ = self.layer_Z_(F1_)
 
         return Z_
 
@@ -253,8 +245,7 @@ class CrossAttLayer_Enc(nn.Module):
 
         self.layer_X_ = nn.LayerNorm(feature_dim)
         self.layer_att_ = nn.MultiheadAttention(embed_dim=feature_dim,num_heads=head_num, add_zero_attn=True)
-        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,k*feature_dim), nn.ReLU())
-        self.layer_F2_ = nn.Sequential(nn.Linear(k*feature_dim,feature_dim), nn.ReLU())
+        self.layer_F1_ = nn.Sequential(nn.Linear(feature_dim,feature_dim), nn.ReLU())
         self.layer_Z_ = nn.LayerNorm(feature_dim)
 
     def forward(self, q, kv, batch_mask, padding_mask=None, hidden_mask=None):
@@ -273,7 +264,6 @@ class CrossAttLayer_Enc(nn.Module):
         att_output,_ = self.layer_att_(q,k,v,key_padding_mask=padding_mask,attn_mask=batch_mask)
         S_ = att_output + q
         F1_ = self.layer_F1_(S_)
-        F2_ = self.layer_F2_(F1_)
-        Z_ = self.layer_Z_(F2_)
+        Z_ = self.layer_Z_(F1_)
 
         return Z_

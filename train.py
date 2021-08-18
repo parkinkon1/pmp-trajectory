@@ -39,6 +39,10 @@ def train(cfg, model, train_dataloader, val_dataloader):
         'callbacks': train_callbacks,
         'gpus': cfg.train.n_gpus,
         'max_epochs': cfg.train.max_epochs,
+        'profiler': 'advanced',
+        'log_every_n_steps': 500,
+        'gradient_clip_val': 1.0,
+        # 'val_check_interval': 100
     }
     if cfg.train.ckpt_path != '':
         trainer_args['resume_from_checkpoint'] = cfg.train.ckpt_path
