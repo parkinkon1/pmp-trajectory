@@ -31,7 +31,7 @@ dataset:
     num_workers: 5
 
 train:
-  n_gpus: 1  # -1 for all, [gpu1, gpu2, ...] for specific
+  n_gpus: -1  # -1 for all, [gpu1, gpu2, ...] for specific
   accelerator: 'ddp'  # '' for None, 'dp', 'ddp'
   lr: 0.0001
   n_epochs: 100

@@ -220,8 +220,8 @@ class BasicPMP(pl.LightningModule):
         false_ids = false_mask.nonzero(as_tuple=True)[0]
         min_len = min(len(true_ids), len(false_ids))
 
-        true_ids = true_ids[torch.randperm(len(true_ids))[:min_len]]
-        false_ids = false_ids[torch.randperm(len(false_ids))[:min_len]]
+        true_ids = true_ids[torch.randint(len(true_ids), size=(min_len,))]
+        false_ids = false_ids[torch.randint(len(false_ids), size=(min_len,))]
 
         loss = F.cross_entropy(outputs[true_ids], targets[true_ids]) \
             + F.cross_entropy(outputs[false_ids], targets[false_ids])
